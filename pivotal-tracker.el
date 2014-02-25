@@ -568,8 +568,16 @@ Labels:       %s
   (let ((owner (pivotal-story-attribute story 'owned_by))
         (estimate (pivotal-story-attribute story 'estimate))
         (story-name (pivotal-story-attribute story 'name))
+        (label (pivotal-story-attribute story 'labels))
+        (id (pivotal-story-attributes story 'id))
         (status (pivotal-story-attribute story 'current_state)))
-    (format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
+    ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
+    (format "[%4.4s][%2.2s][%9.9s][%9.9s]{%20.20s} %.80s\n" owner estimate status id label story-name)))
+
+;; Owner Estimate Status Story-name
+;; Write a function to extract dev-team labels
+;; owner(4) estimate(2) status(9) id(9) labels(20) story-name
+;; sample story number (length "62257008")
 
 (defun pivotal-remove-story-at-point ()
   "delete all characters that belong to the current story. Put point at the first char of the next story."
