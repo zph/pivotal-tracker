@@ -575,7 +575,7 @@ Labels:       %s
         (story-name (pivotal-story-attribute story 'name))
         (label
           (extract-string ",\\(.*dev.*\\)," (pivotal-story-attribute story 'labels)))
-        (id (pivotal-story-attributes story 'id))
+        (id (pivotal-story-attribute story 'id))
         (status (pivotal-story-attribute story 'current_state)))
     ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
     (format "[%4.4s][%2.2s][%9.9s][%9.9s]{%20.20s} %.80s\n" owner estimate status id label story-name)))
