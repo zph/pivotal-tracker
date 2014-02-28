@@ -564,11 +564,17 @@ Labels:       %s
           (pivotal-tasks story)
           (pivotal-comments story)))
 
+(defun extract-string(regex string)
+  "Extract a string in a regex (the bit in ()'s)"
+  (interactive)
+  (let ((s string)) (if (string-match regex s) (match-string 1 s) s)))
+
 (defun pivotal-format-story-oneline (story)
   (let ((owner (pivotal-story-attribute story 'owned_by))
         (estimate (pivotal-story-attribute story 'estimate))
         (story-name (pivotal-story-attribute story 'name))
-        (label (pivotal-story-attribute story 'labels))
+        (label
+          (extract-string ",\\(.*dev.*\\)," (pivotal-story-attribute story 'labels)))
         (id (pivotal-story-attributes story 'id))
         (status (pivotal-story-attribute story 'current_state)))
     ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
