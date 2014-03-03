@@ -580,7 +580,7 @@ Labels:       %s
         (id (pivotal-story-attribute story 'id))
         (status (pivotal-story-attribute story 'current_state)))
     ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
-    (format "[%4.4s][%2.2s][%9.9s][%9.9s] %50.80s  (%s)\n" owner estimate status id story-name label)))
+    (format "[%4.4s][%2.2s][%9.9s][%9.9s] %50.50s - (%s)\n" owner estimate status id story-name label)))
 
 (defun has-dev(string)
   "Match string if it has dev in it"
