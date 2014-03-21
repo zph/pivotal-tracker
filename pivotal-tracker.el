@@ -527,6 +527,10 @@
     (string-match "pivotal-\\([0-9]+\\)" story-str)
     (match-string 1 story-str)))
 
+(defun pivotal-story-link (id)
+  (concat "https://www.pivotaltracker.com/story/show/" id)
+)
+
 (defun pivotal-task-id-at-point (&optional position)
   (save-excursion
     (beginning-of-line)
@@ -540,6 +544,7 @@
 
 (defun pivotal-format-story (story)
   (format "%s #%s
+Link:         %s
 Status:       %s
 Requested By: %s
 Owned By:     %s
@@ -556,6 +561,7 @@ Labels:       %s
 "
           (pivotal-story-attribute story 'story_type)
           (pivotal-story-attribute story 'id)
+          (pivotal-story-link (pivotal-story-attribute story 'id))
           (pivotal-story-attribute story 'current_state)
           (pivotal-story-attribute story 'requested_by)
           (pivotal-story-attribute story 'owned_by)
@@ -579,7 +585,7 @@ Labels:       %s
         (id (pivotal-story-attribute story 'id))
         (status (pivotal-story-attribute story 'current_state)))
     ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
-    (format "[%4.4s][%2.2s][%9.9s][%9.9s] %50.50s - (%s)\n" owner estimate status id story-name label)))
+    (format "[%6.6s][%2.2s][%9.9s][%9.9s] %50.50s - (%s)\n" owner estimate status id story-name label)))
 
 (defun has-dev(string)
   "Match string if it has dev in it"
