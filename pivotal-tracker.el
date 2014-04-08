@@ -82,6 +82,13 @@
   (interactive)
   (pivotal-get-iteration *pivotal-iteration*))
 
+(defun pivotal-get-current-by-tag (label)
+  "show a buffer of all stories in the currently selected iteration that have label"
+  (interactive)
+  (pivotal-get-iteration *pivotal-iteration*)
+  (pivotal-story-attribute story 'labels)
+)
+
 (defun pivotal-get-iteration (iteration)
   (let ((query-string (if (= pivotal-current-iteration-number iteration)
                           "iterations/current"
@@ -576,20 +583,43 @@ Labels:       %s
   (let ((s string)) (if (string-match regex s) (match-string 1 s) s)))
 
 (defun pivotal-format-story-oneline (story)
-  (let ((owner (pivotal-story-attribute story 'owned_by))
-        (estimate (pivotal-story-attribute story 'estimate))
-        (story-name (pivotal-story-attribute story 'name))
-        (label
-          (extract-string ",\\(.*dev.*\\),"
-                          (pivotal-story-attribute story 'labels)))
-        (id (pivotal-story-attribute story 'id))
-        (status (pivotal-story-attribute story 'current_state)))
-    ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
-    (format "[%6.6s][%2.2s][%9.9s][%9.9s] %50.50s - (%s)\n" owner estimate status id story-name label)))
+  "Oneline format based on STORY."
+  ;;; HORRIBLE HACK
+  (if (has-label "dev c" (pivotal-story-attribute story 'labels))
+    (pivotal-format-single-story-oneline story)
+    (pivotal-format-single-story-oneline-other-teams story)
+    )
+)
 
-(defun has-dev(string)
+(defun pivotal-format-single-story-oneline-other-teams (story)
+    (let ((owner (pivotal-story-attribute story 'owned_by))
+          (estimate (pivotal-story-attribute story 'estimate))
+          (story-name (pivotal-story-attribute story 'name))
+          (label
+            (extract-string ",\\(.*dev.*\\),"
+                            (pivotal-story-attribute story 'labels)))
+          (id (pivotal-story-attribute story 'id))
+          (status (pivotal-story-attribute story 'current_state)))
+      (format "[%12.12s][%9.9s]\n" "Other Team" id)
+))
+
+(defun pivotal-format-single-story-oneline (story)
+    (let ((owner (pivotal-story-attribute story 'owned_by))
+          (estimate (pivotal-story-attribute story 'estimate))
+          (story-name (pivotal-story-attribute story 'name))
+          (label
+            (extract-string ",\\(.*dev.*\\),"
+                            (pivotal-story-attribute story 'labels)))
+          (id (pivotal-story-attribute story 'id))
+          (status (pivotal-story-attribute story 'current_state)))
+      ;;(format "[%4.4s][%1.1s][%9.9s] %.80s\n" owner estimate status story-name)))
+      (format "[%6.6s][%2.2s][%9.9s][%9.9s] %50.50s - (%s)\n" owner estimate status id story-name label))
+)
+(defun has-label(label string)
   "Match string if it has dev in it"
-  (extract-string "\\(.*dev.*\\)" string))
+  (s-matches? label string))
+
+(has-label "dev c" "p_portal,r_portal tbd,t_dev c,x_portal")
 
 ;;(mapcar has-dev (s-split "," "prepre,pre,team_dev f,after"))
 ;;(extract-string ",\\(.*dev.*\\)," "prepre,pre,team_dev f,after")
