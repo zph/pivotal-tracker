@@ -1,5 +1,7 @@
 # pivotal-tracker.el
 
+# This is a fork that is tailored to my current workflow needs. I don't think the changes are of high utility to others but I'd be happy to have these changes merged upstream if jxa so desires :heart: - @ZPH
+
 Pivotal Tracker Mode provides a mode and functions for interacting with Pivotal Tracker through its API.
 It is designed to give most of the functionality that is important to a developer.
 It is not an attempt to replace every feature of the web interface.
@@ -51,6 +53,11 @@ or set it manually:
 ## Issues & Feature Requests
 
 Development is [hosted on github](https://github.com/jxa/pivotal-tracker)
+
+## TODO
+
+- Allow creation of stories that are Chores, Bugs, non-Features (currently defaults to Features and doesn't prompt for alternative) (@ZPH)
+
 
 ## Licensing
 
