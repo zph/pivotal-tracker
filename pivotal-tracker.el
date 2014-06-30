@@ -54,6 +54,9 @@
 (defconst pivotal-states `("unstarted" "started" "finished" "delivered" "accepted" "rejected")
   "story status will be one of these values")
 
+(defconst pivotal-story-types `("Feature" "Chore" "Bug")
+  "story type will be one of these values")
+
 (defconst pivotal-current-iteration-number -1)
 
 (defvar *pivotal-current-project*)
@@ -391,11 +394,12 @@
     (mapcar 'pivotal-project-member->member-name-id-association
             (pivotal-get-project-members project-id))))
 
-(defun pivotal-add-story (name description owner-id requester-id estimate)
+(defun pivotal-add-story (name type description owner-id requester-id estimate)
   (interactive
    (let ((member-name-id-alist (pivotal-project->member-name-id-alist *pivotal-current-project*))
          (estimate-scale       (pivotal-get-estimate-scale *pivotal-current-project*)))
      (list (read-string "Name: " nil 'pivotal-story-name-history)
+           (read-string "Story Type: " nil 'pivotal-story-types) ;; TODO: make this autocomplete
            (read-string "Description: " nil 'pivotal-story-description-history)
            (cdr (assoc (completing-read "Owner: "
                                         member-name-id-alist
@@ -420,6 +424,7 @@
   (kill-buffer (pivotal-json-api (pivotal-v5-url "projects" *pivotal-current-project* "stories")
                                  "POST"
                                  (json-encode (list :name            name
+                                                    :story_type      type
                                                     :description     description
                                                     :owned_by_id     owner-id
                                                     :requested_by_id requester-id
